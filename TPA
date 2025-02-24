@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black & White Prompt Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAYElEQVRYR+3SsQ2AMAwF0K/oCEZAcATzop6sILgLwc/QWglWSSVZZUklWSWpJKskqySrJKskqySrJKskqySrJKskqySrJKskqySrJKskqySrJKskqySrJKskq6R/AOnSFnkmj1oUAAAAAElFTkSuQmCC') repeat;
+            color: #000;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 40px;
+            border: 3px solid #000;
+            border-radius: 15px;
+            box-shadow: 10px 10px 0 #000;
+        }
+        #prompt {
+            font-size: 1.8em;
+            margin-bottom: 40px;
+            color: #000;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #fff;
+        }
+        #subPrompt {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #000;
+            font-style: italic;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        button {
+            padding: 12px 35px;
+            font-size: 1.3em;
+            font-weight: bold;
+            background: #000;
+            color: #fff;
+            border: 3px solid #fff;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
+        button:hover {
+            transform: scale(1.1) rotate(3deg);
+            background: #fff;
+            color: #000;
+            border: 3px solid #000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+        #subButton {
+            font-size: 1.1em;
+            padding: 10px 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="prompt">Click the button for a bold prompt!</div>
+        <div class="button-container">
+            <button id="mainButton" onclick="generatePrompt()">Get Prompt</button>
+            <button id="subButton" onclick="generateSubPrompt()">Get Sub-Idea</button>
+        </div>
+        <div id="subPrompt"></div>
+    </div>
+
+    <script>
+        const prompts = [
+            "A baker accidentally summons a demon with a new recipe.",
+            "A time traveler loses their watch in medieval France.",
+            "Write about a cat that predicts the weather.",
+            "A lighthouse keeper hears singing from the waves.",
+            "A chef’s new dish changes people’s memories.",
+            "An astronaut wakes up alone on a thriving alien planet.",
+            "A thief discovers a magical artifact in a mundane shop.",
+            "Two strangers meet during a blackout and share a secret.",
+            "A child befriends a shadow that moves on its own.",
+            "A musician’s song accidentally opens a portal.",
+            "A widow finds a letter from her future self.",
+            "A clock ticks backward in an empty house.",
+            "A sailor trades his soul for a stormless sea.",
+            "A detective uncovers a crime he committed.",
+            "A flower blooms only under moonlight.",
+            "A robot therapist gains emotions.",
+            "A painter’s portraits come to life at midnight.",
+            "A soldier deserts to join the enemy’s cause.",
+            "A library book whispers secrets to its reader.",
+            "A mountain hides a city in its shadow.",
+            "A gambler bets his memories and wins.",
+            "A bird carries a message across centuries.",
+            "A scientist builds a mirror that shows the past.",
+            "A dancer’s shadow performs a different routine.",
+            "A tree grows fruit that tastes like regret.",
+            "A fisherman catches a bottle with a map inside.",
+            "A stranger offers a key to an unknown door.",
+            "A storm reveals a shipwreck in the sky.",
+            "A poet’s words reshape reality.",
+            "A ghost refuses to leave a living body.",
+            "A tailor stitches a coat that grants invisibility.",
+            "A farmer unearths a talking skull in his field.",
+            "A pianist plays a melody that summons rain.",
+            "A traveler finds a city that only exists in fog.",
+            "A sculptor carves a statue that weeps real tears.",
+            "A merchant sells dreams in glass bottles.",
+            "A dog leads its owner to a buried treasure.",
+            "A pilot flies into a cloud that never ends.",
+            "A teacher’s chalk draws portals on the blackboard.",
+            "A clockmaker builds a device that stops time.",
+            "A widow’s mirror reflects her husband’s ghost.",
+            "A hiker discovers a valley where stars touch the ground.",
+            "A writer’s pen bleeds ink that predicts the future.",
+            "A photographer captures souls in her pictures.",
+            "A baker’s bread heals the sick but curses the greedy.",
+            "A soldier’s helmet replays his fallen comrades’ voices.",
+            "A child’s kite lifts them into the sky forever.",
+            "A librarian finds a book that rewrites itself daily.",
+            "A fisherman hooks a creature that speaks in riddles.",
+            "A thief steals a crown that burns the unworthy.",
+            "A gardener plants seeds that grow into memories.",
+            "A singer’s voice shatters glass and hearts alike.",
+            "A hermit lives in a cave that shifts locations.",
+            "A scientist’s experiment turns shadows into solid objects.",
+            "A dancer performs a routine that summons spirits.",
+            "A blacksmith forges a sword that sings when swung.",
+            "A traveler’s map redraws itself with each step.",
+            "A poet recites verses that summon forgotten gods.",
+            "A painter’s brush strokes alter the weather.",
+            "A doctor’s patient wakes up with someone else’s memories.",
+            "A sailor’s compass points to lost loves instead of north.",
+            "A child’s toy soldier marches on its own at night.",
+            "A baker’s oven bakes bread that whispers secrets.",
+            "A writer’s typewriter types stories that come true.",
+            "A thief’s stolen coin multiplies endlessly.",
+            "A musician’s violin strings vibrate with the dead’s voices.",
+            "A farmer’s scarecrow moves when no one watches.",
+            "A pilot’s plane lands in a different era.",
+            "A librarian’s shelves rearrange themselves nightly.",
+            "A fisherman’s net catches a star from the sea.",
+            "A soldier’s boots leave footprints that glow.",
+            "A painter’s canvas reveals hidden truths.",
+            "A dancer’s shoes force her to dance eternally.",
+            "A scientist’s formula turns water into fire.",
+            "A child’s drawing comes to life in the dark.",
+            "A tailor’s thread binds souls to fabric.",
+            "A merchant’s wares vanish when the moon rises.",
+            "A writer’s notebook traps readers inside its pages.",
+            "A thief’s shadow betrays him to his victims.",
+            "A musicianwoman sings a haunting melody under a full moon."
+        ];
+
+        // Auto-generate to reach 500 prompts
+        const characters = ["writer", "knight", "child", "ghost", "pirate", "witch", "king", "queen", "spy", "monk", "explorer", "alchemist", "merchant", "beast", "sorcerer"];
+        const actions = ["discovers", "loses", "creates", "hides", "steals", "summons", "destroys", "seeks", "fights", "sings", "paints", "builds", "escapes", "betrays", "finds"];
+        const objects = ["a book", "a sword", "a ring", "a map", "a crown", "a mirror", "a key", "a stone", "a scroll", "a potion", "a lantern", "a coin", "a mask", "a relic", "a gem"];
+        const places = ["in a cave", "on a ship", "under a bridge", "in the stars", "beneath the sea", "in a forest", "on a mountain", "in a castle", "under the moon", "in a storm", "at dawn", "in a desert", "on an island", "in a tower", "in the shadows"];
+        const twists = ["that glows", "of ancient power", "cursed by time", "from another world", "that speaks", "lost to legend", "forged in fire", "hidden in plain sight", "of forgotten kings", "that shifts"];
+
+        while (prompts.length < 500) {
+            const c = characters[Math.floor(Math.random() * characters.length)];
+            const a = actions[Math.floor(Math.random() * actions.length)];
+            const o = objects[Math.floor(Math.random() * objects.length)];
+            const p = places[Math.floor(Math.random() * places.length)];
+            const t = twists[Math.floor(Math.random() * twists.length)];
+            prompts.push(`A ${c} ${a} ${o} ${p} ${t}.`);
+        }
+
+        // Sub-prompt variations with themes (60 total)
+        const subTwists = [
+            // Mystery
+            "Only to find it’s not what it seems.",
+            "And the truth lies buried deeper.",
+            "Only the key lies in a riddle.",
+            "But it hides a secret no one can know.",
+            "And a clue emerges from the silence.",
+            "Only it’s a puzzle with missing pieces.",
+            // Danger
+            "But it comes with a hidden cost.",
+            "Only it’s guarded by a forgotten foe.",
+            "But it awakens something ancient.",
+            "And it ignites a war no one foresaw.",
+            "But it demands a terrible sacrifice.",
+            "And it draws a predator’s gaze.",
+            // Transformation
+            "And it changes them forever.",
+            "But it binds them to an unseen force.",
+            "And it shifts the world around them.",
+            "But it fractures their reality.",
+            "And they become something else entirely.",
+            "Only it rewrites their very soul.",
+            // Revelation
+            "Which leads to an unexpected ally.",
+            "Only to uncover a lost prophecy.",
+            "And it reveals a face from the past.",
+            "But it’s tied to their own past.",
+            "And it whispers a dangerous secret.",
+            "Only to expose a truth long buried.",
+            // Surrealism
+            "But it’s alive and knows their name.",
+            "And it summons a vision of the end.",
+            "Only it’s watching them back.",
+            "And it bends the laws of time.",
+            "But it pulses with a strange energy.",
+            "And it paints the sky with impossible colors.",
+            // Betrayal
+            "Only to discover a rival seeks it too.",
+            "But it’s a trap set centuries ago.",
+            "And a friend turns against them.",
+            "Only it’s a lie they’ve always believed.",
+            "But it betrays them at the last moment.",
+            "And trust crumbles in its wake.",
+            // Journey
+            "And the journey takes a darker turn.",
+            "And it leads to a forbidden place.",
+            "But it offers a path to redemption.",
+            "And it ends where it all began.",
+            "Only it takes them beyond the horizon.",
+            "But the road twists into shadow.",
+            // Power
+            "But the power comes with a curse.",
+            "And it grows stronger with each step.",
+            "Only it’s a gift they can’t control.",
+            "But it consumes all who touch it.",
+            "And it bends fate to its will.",
+            "Only it demands their allegiance.",
+            // Loss
+            "But the consequences unravel time.",
+            "And it vanishes at dawn.",
+            "Only to fracture their memory.",
+            "But it steals something they can’t reclaim.",
+            "And it leaves a void in its place.",
+            "Only it fades with the light.",
+            // Connection
+            "And a stranger watches from the shadows.",
+            "Only it calls to something beyond.",
+            "And it links them to a stranger’s fate.",
+            "But it echoes with forgotten voices.",
+            "And it binds two worlds together.",
+            "Only it’s a thread to their lost kin."
+        ];
+
+        let currentPrompt = "Click the button for a bold prompt!";
+
+        function generatePrompt() {
+            const randomIndex = Math.floor(Math.random() * prompts.length);
+            currentPrompt = prompts[randomIndex];
+            document.getElementById("prompt").innerText = currentPrompt;
+            document.getElementById("subPrompt").innerText = ""; // Clear sub-prompt when new main prompt is generated
+        }
+
+        function generateSubPrompt() {
+            if (currentPrompt === "Click the button for a bold prompt!") {
+                document.getElementById("subPrompt").innerText = "Generate a main prompt first!";
+            } else {
+                const randomTwist = subTwists[Math.floor(Math.random() * subTwists.length)];
+                document.getElementById("subPrompt").innerText = randomTwist; // Only the sub-twist, no main prompt
+            }
+        }
+    </script>
+</body>
+</html>
